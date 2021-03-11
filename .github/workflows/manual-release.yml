@@ -1,0 +1,59 @@
+
+
+
+
+name: Manual Release
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Set up Git
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      
+      - uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}
+      
+      - name: Install PyInstaller globally
+        run: pip install --upgrade --upgrade-strategy eager pyinstaller
+      
+      - name: BUILD TIME !!!
+        run: |
+          pyinstaller --onefile Spammer.py
+          copy .\dist\Spammer.exe .\Spammer.exe
+          dir
+      
+      - name: BUILD TIME !!!
+        run: |
+          pyinstaller --onefile Terminal.py
+          copy .\dist\Terminal.exe .\Terminal.exe
+          dir
+      
+      - name: RELEASE TIME !!!
+        if: github.event_name == 'workflow_dispatch'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest-release"
+          prerelease: false
+          title: Relese
+          files: |
+            Terminal.exe
+            LICENSE
+            README.md
+
+
+
