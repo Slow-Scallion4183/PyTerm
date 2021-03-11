@@ -1,0 +1,58 @@
+
+
+name: Automatic Pre-Release
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Set up Git
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+
+      - name: Get pip cache dir
+        id: pip-cache
+        run: |
+          python -c "from pip._internal.locations import USER_CACHE_DIR; print('::set-output name=dir::' + USER_CACHE_DIR)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+        
+      - name: Install requirements
+        run: pip install --upgrade --upgrade-strategy eager -r requirements.txt
+      
+      - name: Install PyInstaller globally
+        run: pip install --upgrade --upgrade-strategy eager pyinstaller
+      
+      - name: BUILD TIME !!!
+        run: |
+          pyinstaller --onefile Spammer.py
+          copy .\dist\Spammer.exe .\Spammer.exe
+          dir
+      
+      - name: RELEASE TIME !!!
+        if: github.event_name == 'push'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: Automatic Pre-Relese (unstable)
+          files: |
+            Spammer.exe
+            LICENSE
+            README.md
