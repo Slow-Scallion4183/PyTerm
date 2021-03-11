@@ -1,0 +1,49 @@
+
+
+name: Automatic Pre-Release
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Set up Git
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+          architecture: 'x64'
+      
+      - uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}
+      
+      - name: Install PyInstaller globally
+        run: pip install --upgrade --upgrade-strategy eager pyinstaller
+      
+      - name: BUILD TIME !!!
+        run: |
+          pyinstaller --onefile Terminal.py
+          copy .\dist\Terminal.exe .\Terminal.exe
+          dir
+      
+      - name: RELEASE TIME !!!
+        if: github.event_name == 'push'
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: Automatic Pre-Relese (unstable)
+          files: |
+            Terminal.exe
+            LICENSE
+            README.md
