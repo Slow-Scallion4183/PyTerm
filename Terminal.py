@@ -27,7 +27,7 @@ hostname = subprocess.run(['hostname'], capture_output=True).stdout.decode('UTF-
 coloredHostname = f'{colors.BLUE}{hostname}'
 
 
-fullPrompt = f'{colors.BOLD}{colors.RED}[{coloredUser}{colors.GREEN}@{coloredHostname}{colors.RED}]{colors.WHITE}$ {colors.RESET}'
+prompt = f'{colors.BOLD}{colors.RED}[{coloredUser}{colors.GREEN}@{coloredHostname}{colors.RED}]{colors.WHITE}$ {colors.RESET}'
 
 if platform.system() == "Windows":
     system("title " + "Terminal v0.1") # Does not work on Linux
