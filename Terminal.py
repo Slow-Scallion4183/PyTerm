@@ -29,7 +29,7 @@ coloredHostname = f'{colors.BLUE}{hostname}'
 
 fullPrompt = f'{colors.BOLD}{colors.RED}[{coloredUser}{colors.GREEN}@{coloredHostname}{colors.RED}]{colors.WHITE}$ {colors.RESET}'
 
-if platform() == "Windows":
+if platform.system() == "Windows":
     system("title " + "Terminal v0.1") # Does not work on Linux
 
 print("Terminal v0.1 By SkepticalPotato2k And LukasDoesDev")
