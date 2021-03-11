@@ -32,12 +32,6 @@ jobs:
       
       - name: BUILD TIME !!!
         run: |
-          pyinstaller --onefile Spammer.py
-          copy .\dist\Spammer.exe .\Spammer.exe
-          dir
-      
-      - name: BUILD TIME !!!
-        run: |
           pyinstaller --onefile Terminal.py
           copy .\dist\Terminal.exe .\Terminal.exe
           dir
