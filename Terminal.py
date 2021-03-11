@@ -9,6 +9,8 @@ os.system('') # allows colours to be printed in Command Prompt and Powershell na
 class colors:
     BLACK = '\033[30m'
     RED = '\033[31m'
+    ORANGE = '\033[35m'
+    ORANG = '\x1b[38;2;255;165;0m'
     GREEN = '\033[32m'
     YELLOW = '\033[33m'
     BLUE = '\033[34m'
@@ -26,50 +28,67 @@ coloredUser = f'{colors.YELLOW}{user}'
 hostname = subprocess.run(['hostname'], capture_output=True).stdout.decode('UTF-8').strip()
 coloredHostname = f'{colors.BLUE}{hostname}'
 
-
-prompt = f'{colors.BOLD}{colors.RED}[{coloredUser}{colors.GREEN}@{coloredHostname}{colors.RED}]{colors.WHITE}$ {colors.RESET}'
-
 if platform.system() == "Windows":
-    system("title " + "Terminal v0.1") # Does not work on Linux
+    os.system("title " + "Terminal v0.1") # Does not work on Linux
 
 print("Terminal v0.1 By SkepticalPotato2k And LukasDoesDev")
 
+def runCommand(cmd):
+    if cmd.startswith('cd'):
+        if cmd == 'cd':
+            print('No directory specified')
+        elif cmd == 'cd..':
+            os.chdir('..')
+        else:
+            # Split for each space
+            raw = cmd.split(' ')
+            # Remove the "@eval" from the start
+            raw.pop(0)
+            # Join the list together to create the script location
+            directory = ' '.join(raw)
+
+            if os.path.isdir(directory):
+                os.chdir(directory)
+                
+            else:
+                print('Invalid directory specified')
+    else:
+        # if command is a comment.
+        if cmd.startswith('#'):
+            pass # You cannot have empty blocks. You have to have code or the pass keyword
+        else:
+            os.system(cmd)
+
 while True:
     print()
+    prompt = f'{colors.BOLD}{colors.RED}[{coloredUser}{colors.GREEN}@{coloredHostname} {colors.ORANGE}{os.path.basename(os.getcwd())}{colors.RED}]{colors.WHITE}$ {colors.RESET}'
     commandInput = input(prompt)
     
     if commandInput == 'exit':
         break
     elif commandInput.startswith('@eval'):
-            if commandInput == '@eval':
-                print('No script name specified')
-            else:
-                # Split for each space
-                raw = commandInput.split(' ')
-                # Remove the "@eval" from the start
-                raw.pop(0)
-                # Join the list together to create the script location
-                script = ' '.join(raw)
-
-                # Open for reading
-                scriptFile = open(script, 'r')
-                # Make a list from the lines of the file
-                lines = scriptFile.readlines()
- 
-                # Loop over the lines in the file
-                for line in lines:
-                # Remove whitespace (spaces, newlines etc.) at the beginning and at the end of the string
-                    command = line.strip()
-                # if command is a comment.
-                    if command.startswith('#'):
-                        pass # You cannot have empty blocks. You have to have code or the pass keyword
-                else:
-                    os.system(commandInput)
-    else:
-        # if command is a comment.
-        if commandInput.startswith('#'):
-            pass # You cannot have empty blocks. You have to have code or the pass keyword
+        if commandInput == '@eval':
+            print('No script name specified')
         else:
-            os.system(commandInput)
+            # Split for each space
+            raw = commandInput.split(' ')
+            # Remove the "@eval" from the start
+            raw.pop(0)
+            # Join the list together to create the script location
+            script = ' '.join(raw)
+
+            # Open for reading
+            scriptFile = open(script, 'r')
+            # Make a list from the lines of the file
+            lines = scriptFile.readlines()
+ 
+            # Loop over the lines in the file
+            for line in lines:
+                # Remove whitespace (spaces, newlines etc.) at the beginning and at the end of the string
+                command = line.strip()
+                runCommand(command)
+    else:
+        runCommand(commandInput)
+    
 
 
