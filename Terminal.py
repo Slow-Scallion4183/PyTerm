@@ -31,6 +31,16 @@ coloredHostname = f'{colors.BLUE}{hostname}'
 if platform.system() == "Windows":
     os.system("title " + "Terminal v0.1") # Does not work on Linux
 
+# Might be useful for clearing the terminal screen
+CLEAR_SCREEN = 'clear'
+if platform.system() == 'Windows':
+    CLEAR_SCREEN = 'cls'
+    
+# Usage:
+
+system(CLEAR_SCREEN) # This works on both windows and linux :D
+
+
 print("Terminal v0.1 By SkepticalPotato2k And LukasDoesDev")
 
 def runCommand(cmd):
