@@ -1,6 +1,6 @@
 # PyTerm
 
-Recently, I discovered a way to install modules without the CMD.  One way to do this is with the "OS" module. Next, i searched for more information about this function on the web, and I found that it is related to the CMD. then I had the idea, to make a Linux like Terminal! So I Began this project. 
+Recently, I discovered a way to install modules without the CMD.  One way to do this is with the "OS" module. Next, i searched for more information about this function on the web, and I found that it is related to the CMD. Then I had the idea, to make a Linux like Terminal! So I Began this project. 
 
 As always, Happy Coding!
 
